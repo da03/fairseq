@@ -1,7 +1,7 @@
 # Cascaded Text Generation with Markov Transformers
 
 
-![***click me then scroll down to view animation***](https://github.com/cascaded-generation/cascaded-generation-img/raw/master/cascade_fastest.gif)
+![***click me then scroll down to view animation***](https://github.com/cascaded-generation/cascaded-generation-img/raw/master/cascaded-generation-fastest.gif)
 
 Here we provide code to reproduce our results. We provide all training data and training scripts, as well as all pretrained models used in our paper. Our code is built on top of [fairseq](https://github.com/pytorch/fairseq) and [pytorch-struct](https://github.com/harvardnlp/pytorch-struct).
 
