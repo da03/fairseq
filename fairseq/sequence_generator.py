@@ -25,6 +25,31 @@ total_num_total = [0. for _ in range(5)]
 import collections
 import time
 time_spent = collections.defaultdict(float)
+
+def max_marginals(scores):
+    B, N, C, C = scores.shape
+    def combine(a, b):
+        return genbmm.maxbmm(a.view(-1, C, C).contiguous(),
+                             b.view(-1, C, C).contiguous()).view(B, -1, C, C)
+    chart = scores
+    charts = []
+    charts.append(chart)
+    for i in range(1, int(math.log(N, 2)+1):
+        chart = combine(chart[:, ::2], chart[:, 1::2])
+        charts.append(chart)
+    P, S = 0, 1
+    ps = torch.zeros(2, B, 1, C, C).cuda()
+    for i in range(int(math.log(N, 2)-1, -1, -1):
+        ps2 = torch.zeros(2, B, int(2**(int(math.log(N, 2)-i)), C, C).cuda()
+        ps2[P, :, ::2] = ps[P, :, :]
+        ps2[P, :, 1::2] = combine(ps[P, :, :], charts[i][:, ::2])
+        ps2[S, :, ::2] = combine(charts[i][:, 1::2], ps[S, :, :])
+        ps2[S, :, 1::2] = ps[S, :, :]
+        ps = ps2
+    suffix = ps[S, :, :]
+    prefix = ps[P, :, :] 
+    return prefix.max(-2, keepdim=True)[0] + scores.transpose(-2, -1) + suffix.max(-1, keepdim=True)[0]
+
 def max_marginals(scores):
     N_orig = scores.size(1)
     l = math.log(N_orig, 2)
